@@ -14,17 +14,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
 // Your first API endpoint
-app.get('/api/hello', function (req, res) {
+app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
 app.post('/api/shorturl', (req, res) => {
-  console.log(req.body);
+try{
+    console.log(req.body);
   let hostname = req.body.url.split("//")[1];
   hostname = hostname.split('/')[0];
   console.log(hostname);
@@ -45,21 +46,23 @@ app.post('/api/shorturl', (req, res) => {
       }
     }
   })
+} catch(ex) {
+  res.json({ error: 'invalid url' });
+}
 
 })
 
-app.get('/api/shorturl/:urlId', (req,resp) => {
+app.get('/api/shorturl/:urlId', (req, resp) => {
   let urlId = req.params.urlId;
   console.log(urlId);
-  if(urlArray.length > urlId) {
+  if (urlArray.length > urlId) {
     resp.redirect(urlArray[urlId]);
-  }else 
-  {
+  } else {
     resp.json({ error: 'invalid url' });
   }
 })
 
 
-app.listen(port, function () {
+app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
