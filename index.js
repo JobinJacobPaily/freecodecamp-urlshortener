@@ -26,6 +26,7 @@ app.get('/api/hello', function (req, res) {
 app.post('/api/shorturl', (req, res) => {
   console.log(req.body);
   let hostname = req.body.url.split("//")[1];
+  hostname = hostname.split('/')[0];
   console.log(hostname);
   dns.lookup(hostname, (error, address, family) => {
     if (error) {
